@@ -31,9 +31,9 @@ python gh0st.py -u <target_url> [options]
 
 ## Arguments
 
--u, --url (required): Target URL to scan.
--o, --output (optional): Output format. Choose between json (default) or csv.
---depth (optional): Depth of crawling. Default is 1.
+- -u, --url (required): Target URL to scan.
+- -o, --output (optional): Output format. Choose between json (default) or csv.
+- --depth (optional): Depth of crawling. Default is 1.
 
 ## Example 
 
