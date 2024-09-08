@@ -1,4 +1,4 @@
-# Advanced CSRF Vulnerability Scanner
+# Simple CSRF Vulnerability Scanner
 
 This tool is designed to scan web applications for potential Cross-Site Request Forgery (CSRF) vulnerabilities. It performs web crawling to find forms, evaluates them for CSRF protection, and analyzes security headers to ensure that essential security practices are in place.
 
