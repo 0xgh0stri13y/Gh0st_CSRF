@@ -28,7 +28,7 @@ def crawl_and_get_forms(target, max_depth=2, crawled_urls=None):
         return []
 
     crawled_urls.add(target)
-    print("⟬ → ⟭ Crawling started...")
+    print("⟬⁕⟭ Crawling started...")
 
     forms = []
     internal_links = []
@@ -67,10 +67,10 @@ def crawl_and_get_forms(target, max_depth=2, crawled_urls=None):
                 if full_url not in crawled_urls:
                     internal_links.append(full_url)
 
-        print(f"⟬ ✓ ⟭ Crawling finished. Found {len(page_forms)} forms on {target}.")
+        print(f"⟬✓⟭ Crawling finished. Found {len(page_forms)} forms on {target}.")
 
     except Exception as e:
-        print(f"⟬ ✕ ⟭ Failed to crawl {target}: {e}")
+        print(f"⟬✕⟭ Failed to crawl {target}: {e}")
         return forms
 
     # Recursively crawl internal links
@@ -107,7 +107,7 @@ def main():
     depth = args.depth
 
     if not target.startswith(('http://', 'https://')):
-        print("⟬ ⁈ ⟭ Please provide a valid URL (starting with http:// or https://)")
+        print("⟬⁈⟭ Please provide a valid URL (starting with http:// or https://)")
         return
 
     # Phase 1: Crawling
@@ -115,7 +115,7 @@ def main():
     forms = crawl_and_get_forms(target, max_depth=depth)
 
     if not forms:
-        print("⟬ ⁈ ⟭ No forms found.")
+        print("⟬⁈⟭ No forms found.")
         return
 
     # Phase 2: Evaluating
@@ -123,14 +123,14 @@ def main():
     vulnerable_forms = check_csrf(forms)
 
     if vulnerable_forms:
-        print("⟬ ✓ ⟭ CSRF vulnerability found in the following forms:")
+        print("⟬✓⟭ CSRF vulnerability found in the following forms:")
         for form in vulnerable_forms:
-            print(f"⟬ → ⟭ Form with action: {form['action']} and method: {form['method']}")
+            print(f"⟬→⟭ Form with action: {form['action']} and method: {form['method']}")
     else:
-        print("⟬ ✕ ⟭ No CSRF vulnerabilities found.")
+        print("⟬✕⟭ No CSRF vulnerabilities found.")
 
     # Phase 3: Completion
-    print(f" Completed ")
+    print(f" ⟬※⟭Scanning Completed ")
 
 if __name__ == "__main__":
     main()
