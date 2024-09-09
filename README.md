@@ -9,12 +9,6 @@ This tool is designed to scan web applications for potential Cross-Site Request 
 - **Recursive Crawling**: Crawl internal links up to a specified depth.
 - **Customizable Depth**: Set the crawling depth to control the extent of the scan.
 
-## Requirements
-
-- Python 3.7 or higher
-- `aiohttp`
-- `beautifulsoup4`
-- `lxml`
 
 You can install the required packages using `pip`:
 
