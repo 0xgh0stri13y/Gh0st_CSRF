@@ -4,11 +4,10 @@ This tool is designed to scan web applications for potential Cross-Site Request 
 
 ## Features
 
-- **Asynchronous Crawling**: Efficiently scans web pages using asynchronous requests.
-- **Form Extraction**: Identifies forms, including `input`, `textarea`, and `select` elements.
-- **CSRF Evaluation**: Tests forms for CSRF vulnerabilities by simulating POST requests.
-- **Security Header Analysis**: Checks for the presence of important security headers.
-- **Flexible Output**: Save results in JSON or CSV formats.
+- **Form Extraction**: Crawl a website and extract all forms.
+- **CSRF Vulnerability Detection**: Identify forms that lack CSRF protection mechanisms.
+- **Recursive Crawling**: Crawl internal links up to a specified depth.
+- **Customizable Depth**: Set the crawling depth to control the extent of the scan.
 
 ## Requirements
 
