@@ -1,136 +1,130 @@
-import argparse
-import os
-import json
-import re
-import statistics
-import requests
-from pathlib import Path
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlparse
+import argparse as __xw__, os as __zt__, json as __rz__, re as __u__, statistics as __yt__, requests as __qh__
+from pathlib import Path as __np__
+from bs4 import BeautifulSoup as __kl__
+from urllib.parse import urljoin as __jl__, urlparse as __ul__
+import base64 as __a__, codecs as __b__
 
+def __encode__(s):
+    return __a__.b64encode(__b__.encode(s, 'rot_13')).decode()
 
-def banner():
-    print('''
-              ________    ____       __     ___________ ____  ______
-             / ____/ /_  / __ \\_____/ /_   / ____/ ___// __ \\/ ____/
-            / / __/ __ \\/ / / / ___/ __/  / /    \\__ \\/ /_/ / /_    
-           / /_/ / / / / /_/ (__  ) /_   / /___ ___/ / _, _/ __/    
-           \\____/_/ /_/\\____/____/\\__/   \\____//____/_/ |_/_/       
-              ║║      By g h 0 s t _ r i 1 3 y       ║║
+def __decode__(s):
+    return __b__.decode(__a__.b64decode(s).decode(), 'rot_13')
+
+__banner__ = __encode__('''\n\
+              ________    ____       __     ___________ ____  ______\n\
+             / ____/ /_  / __ \_____/ /_   / ____/ ___// __ \/ ____/\n\
+            / / __/ __ \/ / / / ___/ __/  / /    \__ \/ /_/ / /_    \n\
+           / /_/ / / / / /_/ (__  ) /_   / /___ ___/ / _, _/ __/    \n\
+           \____/_/ /_/\____/____/\__/   \____//____/_/ |_/_/       \n\
+              ║║      By g h 0 s t _ r i 1 3 y       ║║\n\
     ''')
 
+def __lx__():
+    print(__decode__(__banner__))
 
-def crawl_and_get_forms(target, max_depth=2, crawled_urls=None):
-    if crawled_urls is None:
-        crawled_urls = set()
+def __oh__(__st__, __iu__=2, __zx__=None):
+    if __zx__ is None:
+        __zx__ = set()
 
-    if max_depth == 0 or target in crawled_urls:
+    if __iu__ == 0 or __st__ in __zx__:
         return []
 
-    crawled_urls.add(target)
-    print("⟬⁕⟭ Crawling started...")
+    __zx__.add(__st__)
+    print(__decode__(__encode__("⟬⁕⟭ Crawling started...")))
 
-    forms = []
-    internal_links = []
+    __tf__ = []
+    __links__ = []
 
     try:
-        response = requests.get(target)
-        soup = BeautifulSoup(response.text, 'html.parser')
+        __r__ = __qh__.get(__st__)
+        __s__ = __kl__(__r__.text, 'html.parser')
 
-        
-        page_forms = soup.find_all('form')
-        for form in page_forms:
-            action = form.get('action')
-            method = form.get('method', 'get').lower()
-            inputs = []
-            for input_tag in form.find_all('input'):
-                input_type = input_tag.get('type', 'text')
-                input_name = input_tag.get('name')
-                input_value = input_tag.get('value', '')
-                inputs.append({
-                    'type': input_type,
-                    'name': input_name,
-                    'value': input_value,
+        __fr__ = __s__.find_all(__decode__(__encode__('form')))
+        for __form__ in __fr__:
+            __action__ = __form__.get(__decode__(__encode__('action')))
+            __method__ = __form__.get(__decode__(__encode__('method')), __decode__(__encode__('get'))).lower()
+            __inputs__ = []
+            for __input__ in __form__.find_all(__decode__(__encode__('input'))):
+                __type__ = __input__.get(__decode__(__encode__('type')), __decode__(__encode__('text')))
+                __name__ = __input__.get(__decode__(__encode__('name')))
+                __value__ = __input__.get(__decode__(__encode__('value')), __decode__(__encode__('')))
+                __inputs__.append({
+                    __decode__(__encode__('type')): __type__,
+                    __decode__(__encode__('name')): __name__,
+                    __decode__(__encode__('value')): __value__,
                 })
-            forms.append({
-                'action': urljoin(target, action),
-                'method': method,
-                'inputs': inputs,
+            __tf__.append({
+                __decode__(__encode__('action')): __jl__(__st__, __action__),
+                __decode__(__encode__('method')): __method__,
+                __decode__(__encode__('inputs')): __inputs__,
             })
 
-        
-        for link in soup.find_all('a', href=True):
-            href = link['href']
-            parsed_href = urlparse(href)
-            if not parsed_href.netloc or parsed_href.netloc == urlparse(target).netloc:
-                full_url = urljoin(target, href)
-                if full_url not in crawled_urls:
-                    internal_links.append(full_url)
+        for __link__ in __s__.find_all(__decode__(__encode__('a')), href=True):
+            __hr__ = __link__[__decode__(__encode__('href'))]
+            __parsed__ = __ul__(__hr__)
+            if not __parsed__.netloc or __parsed__.netloc == __ul__(__st__).netloc:
+                __full_url__ = __jl__(__st__, __hr__)
+                if __full_url__ not in __zx__:
+                    __links__.append(__full_url__)
 
-        print(f"⟬✓⟭ Crawling finished. Found {len(page_forms)} forms on {target}.")
+        print(__decode__(__encode__("⟬✓⟭ Crawling finished.")))
 
-    except Exception as e:
-        print(f"⟬✕⟭ Failed to crawl {target}: {e}")
-        return forms
+    except Exception as __e__:
+        print(__decode__(__encode__("⟬✕⟭ Failed to crawl")) + f" {__st__}: {__e__}")
+        return __tf__
 
-    
-    for link in internal_links:
-        forms += crawl_and_get_forms(link, max_depth - 1, crawled_urls)
+    for __lnk__ in __links__:
+        __tf__ += __oh__(__lnk__, __iu__ - 1, __zx__)
 
-    return forms
+    return __tf__
 
+def __csrf__(__tf__):
+    __vul__ = []
 
-def check_csrf(forms):
-    vulnerable_forms = []
-
-    for form in forms:
-        has_csrf_token = False
-        for input_tag in form['inputs']:
-            if input_tag['name'] and 'csrf' in input_tag['name'].lower():
-                has_csrf_token = True
+    for __f__ in __tf__:
+        __csrf_token__ = False
+        for __input__ in __f__[__decode__(__encode__('inputs'))]:
+            if __input__[__decode__(__encode__('name'))] and __decode__(__encode__('csrf')) in __input__[__decode__(__encode__('name'))].lower():
+                __csrf_token__ = True
                 break
-        if not has_csrf_token:
-            vulnerable_forms.append(form)
+        if not __csrf_token__:
+            __vul__.append(__f__)
 
-    return vulnerable_forms
+    return __vul__
 
+def __main__():
+    __lx__()
 
-def main():
-    banner()
+    __prs__ = __xw__.ArgumentParser(description=__decode__(__encode__('CSRF Vulnerability Scanner')))
+    __prs__.add_argument(__decode__(__encode__('-u')), __decode__(__encode__('--url')), help=__decode__(__encode__('Target URL')), required=True)
+    __prs__.add_argument(__decode__(__encode__('--depth')), help=__decode__(__encode__('Crawling depth (default 2)')), default=2, type=int)
+    __args__ = __prs__.parse_args()
 
-    parser = argparse.ArgumentParser(description='CSRF Vulnerability Scanner')
-    parser.add_argument('-u', '--url', help='Target URL', required=True)
-    parser.add_argument('--depth', help='Crawling depth (default 2)', default=2, type=int)
-    args = parser.parse_args()
+    __target__ = __args__.url
+    __depth__ = __args__.depth
 
-    target = args.url
-    depth = args.depth
-
-    if not target.startswith(('http://', 'https://')):
-        print("⟬⁈⟭ Please provide a valid URL (starting with http:// or https://)")
+    if not __target__.startswith((__decode__(__encode__('http://')), __decode__(__encode__('https://')))):
+        print(__decode__(__encode__("⟬⁈⟭ Please provide a valid URL (starting with http:// or https://)")))
         return
 
-    
-    print(f"Crawling started")
-    forms = crawl_and_get_forms(target, max_depth=depth)
+    print(__decode__(__encode__("Crawling started")))
+    __forms__ = __oh__(__target__, __iu__=__depth__)
 
-    if not forms:
-        print("⟬⁈⟭ No forms found.")
+    if not __forms__:
+        print(__decode__(__encode__("⟬⁈⟭ No forms found.")))
         return
 
-    
-    print(f"Evaluating forms for CSRF vulnerabilities...")
-    vulnerable_forms = check_csrf(forms)
+    print(__decode__(__encode__("Evaluating forms for CSRF vulnerabilities...")))
+    __vulnerable__ = __csrf__(__forms__)
 
-    if vulnerable_forms:
-        print("⟬✓⟭ CSRF vulnerability found in the following forms:")
-        for form in vulnerable_forms:
-            print(f"⟬→⟭ Form with action: {form['action']} and method: {form['method']}")
+    if __vulnerable__:
+        print(__decode__(__encode__("⟬✓⟭ CSRF vulnerability found in the following forms:")))
+        for __form__ in __vulnerable__:
+            print(__decode__(__encode__("⟬→⟭ Form with action:")) + f" {__form__[__decode__(__encode__('action'))]} " + __decode__(__encode__("and method:")) + f" {__form__[__decode__(__encode__('method'))]}")
     else:
-        print("⟬✕⟭ No CSRF vulnerabilities found.")
+        print(__decode__(__encode__("⟬✕⟭ No CSRF vulnerabilities found.")))
 
-    
-    print(f" ⟬※⟭Scanning Completed ")
+    print(__decode__(__encode__(" ⟬※⟭Scanning Completed "))
 
 if __name__ == "__main__":
-    main()
+    __main__()
